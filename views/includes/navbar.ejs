@@ -1,0 +1,81 @@
+<style>
+  nav {
+    height: 3.5rem !important;
+  }
+
+  .custom-search-input {
+    height: 44px;
+    border-radius: 50px !important;
+    border: 1px solid #DDDDDD !important;
+    padding-left: 24px;
+    padding-right: 120px;
+    font-size: 0.95rem;
+    color: #222222;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05) !important;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .custom-search-input:focus {
+    border-color: #A3C7FF !important;
+    box-shadow: 0 0 0 3px rgba(163, 199, 255, 0.4), 0 3px 10px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .custom-search-btn {
+    position: absolute;
+    right: 6px;
+    height: 34px;
+    background-color: #FF385C !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 24px !important;
+    padding: 0 16px !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .custom-search-btn:hover {
+    background-color: #c70230 !important;
+  }
+</style>
+
+<nav class="navbar navbar-expand-md bg-body-tertiary border-bottom bg-body-light sticky-top ">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" href="/listings"><b>Explore</b></a>
+      </div>
+
+      <form action="/listings" method="GET" class="d-flex align-items-center justify-content-center mx-auto mt-3"
+        style="max-width: 500px; width: 100%;">
+        <div class="position-relative d-flex align-items-center">
+
+          <input type="text" name="search" class="form-control custom-search-input" placeholder="Search Titles...">
+
+          <button class="btn custom-search-btn" type="submit">
+            <i class="fa-solid fa-magnifying-glass fs-6"></i> Search
+          </button>
+        </div>
+      </form>
+
+      <div class="navbar-nav ms-auto mt-3">
+        <a class="nav-link" href="/listings/new">List your Home</a>
+        <% if(!currUser) { %>
+          <a class="nav-link" aria-current="page" href="/signup"><b><i>Signup</i></b></a>
+          <a class="nav-link" href="/login"><b><i>Login</i></b></a>
+          <% } %>
+            <% if(currUser) { %>
+              <a class="nav-link" href="/logout"><b><i>logout</i></b></a>
+              <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

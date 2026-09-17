@@ -1,0 +1,146 @@
+<% layout("layouts/boilerplate") %>
+  <div class="row">
+    <div class="col-8 offset-2">
+      <h3>
+        <%= listing.title %>
+      </h3>
+      <br />
+      <div class="card-body">
+        <img src="<%= listing.image.url %>" class="card-img-top" alt="image"
+          style="max-height: 20rem; object-fit: contain !important" />
+        <br /><br />
+        <div class="card-text" style="text-align: center;">
+          <p>Owned by :<i>
+              <%= listing.owner[0]?.username %>
+            </i></p>
+          <b>
+            <%= listing.description %> <br /><br>
+              Price : NRS <%=listing.price?.toLocaleString("en-IN") %>
+                <br />
+                <%= listing.location %>, <%= listing.country %>
+          </b>
+        </div>
+        <br>
+      </div>
+      <% if(currUser && listing.owner && currUser._id.toString()===listing.owner[0]?._id.toString()) { %>
+        <div style="display:flex; justify-content: space-between; align-items: center;">
+          <a href="/listings/<%= listing._id %>/edit" class="btn btn-primary" role="button">Edit this page</a>
+          <br />
+          <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn-outline-danger">
+              <b>Delete</b>
+            </button>
+          </form>
+        </div>
+        <% } %>
+          <br />
+          <hr>
+
+          <h4> <b>All reviews</b></h4>
+          <br>
+          <div class="row">
+            <% for (review of listing.reviews) {%>
+              <% if (review.author) { %>
+                <div class="card p-md-3 col-6 mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <%= review.author.username %>
+                    </h5>
+                    <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+                    <p class="card-text">
+                      <%= review.comment %>.
+                    </p>
+                    <% if(currUser && currUser._id.equals(review.author._id)) { %>
+                      <form action="/listings/<%=listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                      </form>
+                      <% } %>
+                  </div>
+                </div>
+                <% } %>
+                  <% } %>
+          </div>
+          <br>
+          <hr>
+
+          <% let hasReviewed=currUser && listing.reviews.some(review=>
+            (review.author?._id || review.author)?.toString() === currUser._id.toString()
+            );
+            %>
+
+            <% if(currUser && !hasReviewed && currUser._id.toString() !==(listing.owner[0]?._id ||
+              listing.owner[0])?.toString()) { %>
+              <div>
+                <h4><b>Leave a review</b></h4>
+                <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
+                  <br>
+                  <label for="rating" class="form-label">Rating</label>
+                  <fieldset class="starability-heartbeat">
+                    <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
+                      aria-label="No rating." />
+                    <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                    <label for="first-rate1" title="Terrible">1 star</label>
+                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                    <label for="first-rate2" title="Not good">2 stars</label>
+                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                    <label for="first-rate3" title="Average">3 stars</label>
+                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                    <label for="first-rate4" title="Very good">4 stars</label>
+                    <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                    <label for="first-rate5" title="Amazing">5 stars</label>
+                  </fieldset>
+                  <div>
+                    <label for="comment" class="form-label">Leave a comment</label>
+                    <textarea required name="review[comment]" id="comment" cols="25" rows="5"
+                      class="form-control"></textarea>
+                  </div>
+                  <br>
+                  <button type="submit" class="btn btn-outline-dark">Submit</button>
+                </form>
+              </div>
+              <br />
+              <hr>
+              <% } %>
+    </div>
+  </div>
+
+  <!-- 1. Store the server data cleanly inside HTML data attributes -->
+  <div id="map" style="height: 300px; width: 100%; margin-top: 20px; border-radius: 8px; z-index: 1; "
+    data-lat="<%= listing.geometry.coordinates[1] %>" data-lon="<%= listing.geometry.coordinates[0] %>"
+    data-title="<%= listing.title %>" data-location="<%= listing.location %>">
+  </div>
+  <br>
+
+  <script>
+    // 2. Read the elements safely using standard client-side JavaScript
+    const mapElement = document.getElementById('map');
+
+    const lat = parseFloat(mapElement.dataset.lat) || 27.7172;
+    const lon = parseFloat(mapElement.dataset.lon) || 85.3240;
+    const coordinates = [lat, lon];
+
+    const title = mapElement.dataset.title;
+    const locationName = mapElement.dataset.location;
+
+    // 3. Initialize the map
+    const map = L.map('map').setView(coordinates, 15);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // 4. Place marker with popup text cleanly
+    const marker = L.marker(coordinates).addTo(map)
+      .bindPopup(`<h4>${title}</h4><p>${locationName}</p>`)
+      .openPopup();
+
+    const circle = L.circle(coordinates, {
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.4,
+      radius: 250
+    }).addTo(map);
+
+    map.fitBounds(circle.getBounds());
+  </script>

@@ -1,0 +1,65 @@
+<% layout("layouts/boilerplate") %>
+  <br />
+  <div class="row">
+    <div class="col-8 offset-2">
+      <h3>Create new listing</h3>
+      <br />
+      <form action="/listings" method="post" novalidate class="needs-validation" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input class="form-control" type="text" name="listing[title]" placeholder="Enter title" required id="title" />
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea class="form-control" type="text" name="listing[description]" placeholder="Enter description"
+            required id="description"></textarea>
+        </div>
+        <br />
+        <b>Fill only one of the below:</b>
+        <hr />
+        <br />
+        <div class="mb-3">
+          <label for="image" class="form-label">Image URL</label>
+          <input class="form-control" type="text" name="listing[image][url]" placeholder="Enter image URL/Link"
+            id="imageUrl" />
+          <br />
+          <label for="image" class="form-label">Upload Image</label>
+          <input class="form-control" type="file" name="listing[image]" id="image" />
+        </div>
+        <hr />
+        <br />
+        <div class="row">
+          <div class="mb-3 col-md-4">
+            <label for="price" class="form-label">Price</label>
+            <input class="form-control" type="number" name="listing[price]" placeholder="Enter price" required
+              id="price" />
+          </div>
+          <div class="mb-3 col-md-8">
+            <label for="country" class="form-label">Country</label>
+            <input class="form-control" type="text" name="listing[country]" placeholder="Enter country" required
+              id="country" />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="location" class="form-label">Location</label>
+          <input class="form-control" type="text" name="listing[location]" placeholder="Enter location" required
+            id="location" />
+        </div>
+        <div class="mb-3">
+          <label for="category" class="form-label"><b>Category</b></label>
+          <select id="category" name="listing[category]" class="form-select" required>
+            <option value="" disabled selected>Choose One of These</option>
+            <option value="Trending">Trending</option>
+            <option value="Camping">Camping</option>
+          </select>
+          <div class="invalid-feedback">Please select a category.</div>
+        </div>
+
+        <button class="btn btn-dark" type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+  <br /><br />
+  <hr />
+  <br />

@@ -1,0 +1,38 @@
+<% layout("layouts/boilerplate") %>
+  <div class="d-flex text-center gap-4 py-0 mt-0" id="filters">
+    <h4>All listings:</h4>
+    <a href=" /listings?category=Trending" class="text-decoration-none ms-5">
+      <div class="category-filter <%= (locals.activeCategory === 'Trending') ? 'active' : '' %>">
+        <div class="icon"><i class="fa-solid fa-fire fa-md"></i></div>
+        <p class="mb-0">Trending</p>
+      </div>
+    </a>
+    <a href="/listings?category=Camping" class="text-decoration-none">
+      <div class="category-filter <%= (locals.activeCategory === 'Camping') ? 'active' : '' %>">
+        <div class="icon"><i class="fa-solid fa-campground fa-md"></i></div>
+        <p class="mb-0">Camping</p>
+      </div>
+    </a>
+  </div>
+  <hr>
+  <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2">
+    <% for( let listings of allListings){ %>
+      <a href="/listings/<%- listings._id %>" class="listing-link ">
+        <div class="card listing-card border-light shadow-sms"
+          style="padding: 0.2rem; text-align: center; min-height: 18rem; max-height :20rem;">
+          <img src="<%= listings.image.url %>" class="card-img-top mb-1" alt="image"
+            style="max-height: 17rem; min-height :16rem;">
+          <div class="card-img-overlay"></div>
+          <div class="card-body">
+            <b>
+              <p class="card-text mb-2">
+                <%= listings.title %>
+              </p>
+            </b>
+            <p> रु <%= listings.price?.toLocaleString("en-IN") %>
+            </p>
+          </div>
+        </div>
+      </a>
+      <% } %>
+  </div>
